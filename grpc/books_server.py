@@ -1,4 +1,5 @@
 import threading
+import time
 
 from concurrent import futures
 
@@ -6,8 +7,9 @@ import pika
 
 import grpc
 
-from books import books_pb2, books_pb2_grpc
-from books.books_reading_service import BooksReadingService
+from books import books_pb2
+from books import books_pb2_grpc
+from books_reading_service import BooksReadingService
 
 
 class BooksService(books_pb2_grpc.BooksServicer):
@@ -45,7 +47,13 @@ def serve():
 
 
 def rabbit() -> None:
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    time.sleep(10)
+    try:
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=15672))
+    except pika.exceptions.AMQPConnectionError:
+        print("RabbitMQ connection failed")
+        return
+    print(' [*] Waiting for messages. To exit press CTRL+C')
     channel = connection.channel()
 
     channel.queue_declare(queue='books_queue')

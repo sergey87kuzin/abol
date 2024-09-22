@@ -2,8 +2,11 @@ import pika
 
 
 def send_message_to_rabbit(message_text):
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost'))
+    try:
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=25672))
+    except pika.exceptions.AMQPConnectionError:
+        print("RabbitMQ connection failed")
+        return
     channel = connection.channel()
 
     channel.queue_declare(queue='books_queue')

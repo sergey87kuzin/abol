@@ -4,8 +4,8 @@ import pytest
 
 import grpc
 
-from books import books_pb2, books_pb2_grpc
-from books.books_server import BooksService
+from ..books import books_pb2, books_pb2_grpc
+from grpc.books_server import BooksService
 
 
 class TestBooks:

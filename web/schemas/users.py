@@ -43,4 +43,4 @@ class UserPassword(BaseModel):
 
 
 class Token(BaseModel):
-    access_token: str | None = None
+    access_token: str
