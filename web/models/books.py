@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped
 
-from models import Base, intpk, str_256, published_at
+from models import Base, intpk, published_at, str_256
 
 
 class Book(Base):

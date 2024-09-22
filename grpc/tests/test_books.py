@@ -1,9 +1,10 @@
 from concurrent import futures
-import grpc
+
 import pytest
 
-from books import books_pb2
-from books import books_pb2_grpc
+import grpc
+
+from books import books_pb2, books_pb2_grpc
 from books.books_server import BooksService
 
 

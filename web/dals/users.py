@@ -1,12 +1,11 @@
 from http import HTTPStatus
 
 from fastapi import HTTPException
-
-from sqlalchemy import select, update, func
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from schemas import UserToCreate
 from models import User
+from schemas import UserToCreate
 
 __all__ = (
     "UserDAL",

@@ -2,15 +2,16 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.testing.pickleable import User
 from starlette import status
 
 from database_interaction import get_db
-from handlers import get_books_list_handler, create_new_book_handler, get_book_handler, delete_book_handler, \
-    update_book_handler
+from handlers import (
+    create_new_book_handler, delete_book_handler, get_book_handler, get_books_list_handler, update_book_handler,
+)
 from handlers.auth import check_user_auth
-from pagination import PageParams, PagedResponseSchema
-from schemas import BookToShow, BookToCreate, BookToUpdate
+from pagination import PagedResponseSchema, PageParams
+from rabbit_message import send_message_to_rabbit
+from schemas import BookToCreate, BookToShow, BookToUpdate
 
 SessionDep = Annotated[AsyncSession, Depends(get_db)]
 UserDep = Depends(check_user_auth)
@@ -35,7 +36,9 @@ async def books_list(page_params: Annotated[PageParams, Query()], session: Sessi
     description="Создание книги по названию и автору, указывать дату публикации необязательно"
 )
 async def book_create(book: BookToCreate, session: SessionDep):
-    return await create_new_book_handler(book, session)
+    new_book = await create_new_book_handler(book, session)
+    send_message_to_rabbit(f"New book created: {new_book.id}")
+    return new_book
 
 
 @books_router.get(
@@ -56,6 +59,7 @@ async def book_show(book_id: int, session: SessionDep):
 )
 async def book_delete(book_id: int, session: SessionDep):
     await delete_book_handler(book_id, session)
+    send_message_to_rabbit(f"Book deleted: {book_id}")
 
 
 @books_router.patch(
@@ -65,4 +69,6 @@ async def book_delete(book_id: int, session: SessionDep):
     description="Изменение данных о книге"
 )
 async def book_update(book_id: int, book: BookToUpdate, session: SessionDep):
-    return await update_book_handler(book_id, book, session)
+    updated_book = await update_book_handler(book_id, book, session)
+    send_message_to_rabbit(f"Book updated: {book_id}")
+    return updated_book

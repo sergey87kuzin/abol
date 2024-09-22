@@ -5,12 +5,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from schemas import UserToCreate, UserToShow, Token
 from database_interaction import get_db
 from handlers import create_new_user
 from handlers.auth import authenticate_user, create_token
 from handlers.users import change_user_password
-from settings import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_MINUTES
+from schemas import Token, UserToCreate, UserToShow
+from settings import ACCESS_TOKEN_EXPIRE_MINUTES
 
 user_router = APIRouter()
 

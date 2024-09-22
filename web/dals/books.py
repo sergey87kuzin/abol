@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from fastapi import HTTPException
-from sqlalchemy import update, select, delete, func
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import Book
@@ -13,6 +13,7 @@ class BookDAL:
         status_code=HTTPStatus.NOT_FOUND,
         detail="Книга не найдена",
     )
+
     def __init__(self, session: AsyncSession):
         self.db_session = session
 

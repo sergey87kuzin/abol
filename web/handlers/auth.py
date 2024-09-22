@@ -1,17 +1,17 @@
-from datetime import timedelta, datetime, timezone
+from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from typing import Annotated, Union
 
-from fastapi import HTTPException, Depends
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database_interaction import get_db
-from models import User
 from handlers import get_user_by_username_for_login
-from settings import SECRET_KEY, ALGORITHM
+from models import User
+from settings import ALGORITHM, SECRET_KEY
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

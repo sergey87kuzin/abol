@@ -1,11 +1,13 @@
 import datetime
 import json
+
 from http import HTTPStatus
 
 import pytest
+
 from sqlalchemy import select
 
-from models import User, Book
+from models import Book
 from settings import TEST_PASSWORD
 
 user_data = {
@@ -83,7 +85,7 @@ class TestBooks:
             client,
             async_session_test,
     ):
-        response = client.post(f"api/books/", content=json.dumps(data_dict), headers=self.headers)
+        response = client.post("api/books/", content=json.dumps(data_dict), headers=self.headers)
         await self.result_check(response, response_status, async_session_test, data_dict)
 
     @pytest.mark.parametrize(
@@ -151,7 +153,7 @@ class TestBooks:
                 author=f"author_{index}",
                 publish_date=datetime.date.today()
             )
-        list_response = client.get(url=f"api/books/?page=2&limit=10", headers=self.headers)
+        list_response = client.get(url="api/books/?page=2&limit=10", headers=self.headers)
         assert list_response.status_code == HTTPStatus.OK, "Неверный статус запроса при наличии пагинации"
         resp_data = list_response.json()
         assert resp_data.get("objects_count") >= 25

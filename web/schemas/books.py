@@ -1,5 +1,6 @@
 import datetime
 import re
+
 from datetime import date
 from http import HTTPStatus
 from typing import Optional
@@ -8,7 +9,6 @@ from fastapi import HTTPException
 from pydantic import BaseModel, field_validator
 
 from common_api_model import TunedModel
-
 
 __all__ = (
     "BookToCreate",

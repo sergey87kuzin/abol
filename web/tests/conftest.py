@@ -1,8 +1,7 @@
-import asyncio
-from typing import Any, AsyncGenerator
-from typing import Generator
+from typing import Any, AsyncGenerator, Generator
 
 import pytest
+
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -10,9 +9,9 @@ from sqlalchemy.pool import NullPool
 from starlette.testclient import TestClient
 
 from database_interaction import get_db, metadata
-from models import Book, Base, User
 from hashing import Hasher
 from main import app
+from models import Base, Book, User
 from settings import TEST_DATABASE_URL
 
 CLEAN_TABLES = [

@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dals.books import BookDAL
-from pagination import PageParams, paginate, PagedResponseSchema
+from pagination import PagedResponseSchema, PageParams, paginate
 from schemas import BookToCreate, BookToShow, BookToUpdate
 
 __all__ = (

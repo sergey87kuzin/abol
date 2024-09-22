@@ -1,10 +1,12 @@
 import threading
+
 from concurrent import futures
 
-import grpc
 import pika
 
-from books import books_pb2_grpc, books_pb2
+import grpc
+
+from books import books_pb2, books_pb2_grpc
 from books.books_reading_service import BooksReadingService
 
 
@@ -46,12 +48,12 @@ def rabbit() -> None:
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
 
-    channel.queue_declare(queue='hello')
+    channel.queue_declare(queue='books_queue')
 
     def callback(ch, method, properties, body):
         print(f" [x] Received {body}")
 
-    channel.basic_consume(queue='hello', on_message_callback=callback, auto_ack=True)
+    channel.basic_consume(queue='books_queue', on_message_callback=callback, auto_ack=True)
 
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()

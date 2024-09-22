@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 # Get the path to the directory this file is in
