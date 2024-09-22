@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+
+message SingleBookRequest {
+    int32 book_id = 1;
+}
+
+
+message BookListRequest {
+    int32 page = 1;
+    int32 limit = 2;
+}
+
+
+message Book {
+    int32 id = 1;
+    string title = 2;
+    string author = 3;
+    string publish_date = 4;
+
+}
+
+
+message BookListResponse {
+    repeated Book books = 1;
+}
+
+
+message SingleBookResponse {
+    Book book = 1;
+}
+
+
+service Books {
+    rpc SingleBook (SingleBookRequest) returns (SingleBookResponse);
+    rpc BookList (BookListRequest) returns (BookListResponse);
+}

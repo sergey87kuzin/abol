@@ -8,27 +8,14 @@ from alembic import context
 from models import Base
 import settings
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", settings.REAL_DATABASE_URL)
-
-# add your model's MetaData object here
-# for 'autogenerate' support
+config.set_main_option("sqlalchemy.url", settings.REAL_DATABASE_URL.replace("+asyncpg", ""))
 
 target_metadata = Base.metadata
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
-
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
