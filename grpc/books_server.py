@@ -1,3 +1,4 @@
+import logging
 import threading
 import time
 
@@ -37,6 +38,7 @@ class BooksService(books_pb2_grpc.BooksServicer):
 
 
 def serve():
+    logging.info("started")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     books_pb2_grpc.add_BooksServicer_to_server(
         BooksService(), server
@@ -47,26 +49,26 @@ def serve():
 
 
 def rabbit() -> None:
-    time.sleep(10)
+    time.sleep(5)
+    logging.info(' [*] Waiting for messages. To exit press CTRL+C')
     try:
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=15672))
+        connection = pika.BlockingConnection(pika.ConnectionParameters('172.21.0.2'))
     except pika.exceptions.AMQPConnectionError:
-        print("RabbitMQ connection failed")
+        logging.error("RabbitMQ connection failed")
         return
-    print(' [*] Waiting for messages. To exit press CTRL+C')
     channel = connection.channel()
 
-    channel.queue_declare(queue='books_queue')
+    channel.queue_declare(queue='books_queue', arguments={'x-max-length': 100})
 
     def callback(ch, method, properties, body):
-        print(f" [x] Received {body}")
+        logging.info(f" [x] Received {body}")
 
     channel.basic_consume(queue='books_queue', on_message_callback=callback, auto_ack=True)
 
-    print(' [*] Waiting for messages. To exit press CTRL+C')
+    logging.info(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
 
 
 if __name__ == "__main__":
-    threading.Thread(target=rabbit, name="rabbit_thread", daemon=True).start()
+    threading.Thread(target=rabbit, name="--------rabbit_thread------------", daemon=True).start()
     serve()
